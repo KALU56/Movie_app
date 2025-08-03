@@ -1,4 +1,3 @@
-// screens/home.dart
 import 'package:flutter/material.dart';
 import '../core/movie_colors.dart';
 
@@ -9,20 +8,93 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MovieColors.background,
-      appBar: AppBar(
+      drawer: Drawer(
         backgroundColor: MovieColors.primary,
-        title: const Text(
-          'Welcome Home',
-          style: TextStyle(color: MovieColors.highlight),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: const [
+            DrawerHeader(
+              decoration: BoxDecoration(color: MovieColors.accent),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.movie, color: Colors.white),
+              title: Text('Movies', style: TextStyle(color: Colors.white)),
+            ),
+            ListTile(
+              leading: Icon(Icons.tv, color: Colors.white),
+              title: Text('Series', style: TextStyle(color: Colors.white)),
+            ),
+            ListTile(
+              leading: Icon(Icons.star, color: Colors.white),
+              title: Text('Favorites', style: TextStyle(color: Colors.white)),
+            ),
+          ],
         ),
       ),
-      body: const Center(
-        child: Text(
-          'You are now logged in!',
-          style: TextStyle(
-            fontSize: 20,
-            color: MovieColors.secondary,
-          ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+        child: Column(
+          children: [
+   
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: MovieColors.secondary.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.search, color: MovieColors.secondary),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search movies, series, shows...',
+                        hintStyle: TextStyle(color: MovieColors.secondary),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  Builder(
+                    builder: (context) => IconButton(
+                      icon: const Icon(Icons.menu, color: MovieColors.secondary),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'Welcome to MovieVerse 🎬',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: MovieColors.secondary,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
