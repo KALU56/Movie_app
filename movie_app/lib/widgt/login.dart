@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../core/assets.dart';
 import '../core/movie_colors.dart';
@@ -12,6 +13,21 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _obscurePassword = true;
+    final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  Future<void> login() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // Navigate to home screen or show success
+    } catch (e) {
+      // Handle error (e.g., show snackbar)
+      print('Login error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +97,7 @@ class _LoginState extends State<Login> {
 
                   // Email Field
                   TextField(
+                    controller: emailController, 
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.email, color: MovieColors.secondary),
                       enabledBorder: OutlineInputBorder(
@@ -97,6 +114,7 @@ class _LoginState extends State<Login> {
 
                   // Password Field
                   TextField(
+                    controller: passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: 'Enter your password',

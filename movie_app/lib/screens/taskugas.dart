@@ -80,7 +80,7 @@ class _TaskugasState extends State<Taskugas> {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: MovieColors.primary,
+                  color: MovieColors.highlight,
                 ),
               ),
             ],

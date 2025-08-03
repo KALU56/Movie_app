@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../core/movie_colors.dart';
 
@@ -10,6 +11,20 @@ class Siginup extends StatefulWidget {
 
 class _SiginupState extends State<Siginup> {
   bool _obscurePassword = true;
+   final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  Future<void> signup() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // Navigate or show success
+    } catch (e) {
+      print('Signup error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +57,7 @@ class _SiginupState extends State<Siginup> {
 
                   // Email Field
                   TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.email, color: MovieColors.secondary),
                       hintText: 'Enter your email',
@@ -59,6 +75,7 @@ class _SiginupState extends State<Siginup> {
                   // Password Field
                   TextField(
                     obscureText: _obscurePassword,
+                    controller: passwordController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.lock, color: MovieColors.secondary),
                       hintText: 'Enter your password',
