@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/screens/home.dart';
 import '../core/movie_colors.dart';
 
 class Siginup extends StatefulWidget {
@@ -13,18 +14,28 @@ class _SiginupState extends State<Siginup> {
   bool _obscurePassword = true;
    final emailController = TextEditingController();
   final passwordController = TextEditingController();
+Future<void> signup() async {
+  try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-  Future<void> signup() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      // Navigate or show success
-    } catch (e) {
-      print('Signup error: $e');
-    }
+    // ✅ Navigate to Home screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
+  } catch (e) {
+    // ❌ Show error as snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Signup failed: ${e.toString()}'),
+        backgroundColor: MovieColors.accent,
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +159,7 @@ class _SiginupState extends State<Siginup> {
 
                   // Sign Up Button
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: signup,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: MovieColors.accent,
                       foregroundColor: Colors.white,

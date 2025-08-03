@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/assets.dart';
 import '../core/movie_colors.dart';
 import '../screens/forgot_password.dart';
+import '../screens/home.dart'; // 👈 Add this import
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,7 +14,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _obscurePassword = true;
-    final emailController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   Future<void> login() async {
@@ -22,10 +23,20 @@ class _LoginState extends State<Login> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      // Navigate to home screen or show success
+
+      // ✅ Navigate to Home screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     } catch (e) {
-      // Handle error (e.g., show snackbar)
-      print('Login error: $e');
+      // ❌ Show error as snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login failed: ${e.toString()}'),
+          backgroundColor: MovieColors.accent,
+        ),
+      );
     }
   }
 
@@ -97,7 +108,7 @@ class _LoginState extends State<Login> {
 
                   // Email Field
                   TextField(
-                    controller: emailController, 
+                    controller: emailController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.email, color: MovieColors.secondary),
                       enabledBorder: OutlineInputBorder(
@@ -162,7 +173,7 @@ class _LoginState extends State<Login> {
 
                   // Login Button
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: MovieColors.accent,
                       foregroundColor: Colors.white,
