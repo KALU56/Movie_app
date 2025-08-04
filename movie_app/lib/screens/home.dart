@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import '../core/movie_colors.dart';
+import '../widgt/category_button.dart';
 
-class HomeScreen extends StatelessWidget {
+
+class HomeScreen extends StatefulWidget {
+  
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String selectedCategory = 'All';
+  final categories = ['All', 'Advanced', 'Comedy', 'Romance', 'Fantastic', 'Action', 'Drama'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,15 +93,20 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Welcome to MovieVerse 🎬',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: MovieColors.secondary,
-                  ),
-                ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: categories.map((label) {
+                  return CategoryButton(
+                    label: label,
+                    isSelected: selectedCategory == label,
+                    onPressed: () {
+                      setState(() {
+                        selectedCategory = label;
+                      });
+                    },
+                  );
+                }).toList(),
               ),
             ),
           ],
