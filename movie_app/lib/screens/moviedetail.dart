@@ -50,7 +50,7 @@ class MovieDetailScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 189, 32, 32),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -63,19 +63,19 @@ class MovieDetailScreen extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(width: 20),
-                      const Icon(Icons.calendar_today, size: 20, color: Colors.white),
+                      const Icon(Icons.calendar_today, size: 20, color: Color.fromARGB(255, 189, 32, 32)),
                       const SizedBox(width: 5),
                       Text(
                         movie.releaseDate ?? 'N/A',
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Color.fromARGB(255, 189, 32, 32)),
                       ),
                       if (movie.runtime != null) ...[
                         const SizedBox(width: 20),
-                        const Icon(Icons.timer, size: 20, color: Colors.white),
+                        const Icon(Icons.timer, size: 20, color: Color.fromARGB(255, 189, 32, 32)),
                         const SizedBox(width: 5),
                         Text(
                           '${movie.runtime} min',
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Color.fromARGB(255, 189, 32, 32)),
                         ),
                       ],
                     ],
@@ -97,13 +97,13 @@ class MovieDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color:  Color.fromARGB(255, 189, 32, 32),
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     movie.overview ?? 'No overview available',
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(color:  Color.fromARGB(255, 189, 32, 32), fontSize: 16),
                   ),
                 ],
               ),
