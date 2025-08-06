@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // ✅ Fixed the error here (removed the extra single quote)
+import 'package:http/http.dart' as http;
 import '../core/movie_colors.dart';
 import '../widget/category_button.dart';
 import '../models/movie_model.dart';
@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'All';
-
   final categories = [
     'All',
     'Advanced',
@@ -25,20 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
     'Drama',
   ];
 
-  late Future<List<Movie>> futureMovies;
+  late Future<List<Movie>> futurePopularMovies;
+  late Future<List<Movie>> futureTopRatedMovies;
   final MovieApi movieApi = MovieApi();
 
   @override
   void initState() {
     super.initState();
-    futureMovies = movieApi.fetchMovies(selectedCategory);
-  }
-
-  void _fetchMoviesByCategory(String category) {
-    setState(() {
-      selectedCategory = category;
-      futureMovies = movieApi.fetchMovies(category);
-    });
+    futurePopularMovies = movieApi.fetchMovies('Popular');
+    futureTopRatedMovies = movieApi.fetchMovies('Top Rated');
   }
 
   @override
@@ -72,69 +66,163 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-        child: Column(
-          children: [
-            // 🔍 Search Bar
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: MovieColors.secondary.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.search, color: MovieColors.secondary),
-                  const SizedBox(width: 10),
-                  const Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search movies, series, shows...',
-                        hintStyle: TextStyle(color: MovieColors.secondary),
-                        border: InputBorder.none,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search Bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: MovieColors.secondary.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.search, color: MovieColors.secondary),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search movies, series, shows...',
+                          hintStyle: TextStyle(color: MovieColors.secondary),
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                  Builder(
-                    builder: (context) => IconButton(
-                      icon: const Icon(Icons.menu, color: MovieColors.secondary),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
+                    Builder(
+                      builder: (context) => IconButton(
+                        icon: const Icon(Icons.menu, color: MovieColors.secondary),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 30),
+              const SizedBox(height: 30),
 
-            // 🏷️ Category Filter
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: categories.map((label) {
-                  return CategoryButton(
-                    label: label,
-                    isSelected: selectedCategory == label,
-                    onPressed: () => _fetchMoviesByCategory(label),
-                  );
-                }).toList(),
+              // Category Filter
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: categories.map((label) {
+                    return CategoryButton(
+                      label: label,
+                      isSelected: selectedCategory == label,
+                      onPressed: () {
+                        setState(() {
+                          selectedCategory = label;
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // 🎬 Movie Grid
-            Expanded(
-              child: FutureBuilder<List<Movie>>(
-                future: futureMovies,
+              // Popular Movies Horizontal List
+              const Text(
+                'Popular Movies',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 200,
+                child: FutureBuilder<List<Movie>>(
+                  future: futurePopularMovies,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No movies found'));
+                    } else {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final movie = snapshot.data![index];
+                          return Container(
+                            width: 120,
+                            margin: const EdgeInsets.only(right: 10),
+                            child: MoviePoster(movie: movie),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Top Rated Movies Horizontal List
+              const Text(
+                'Top Rated',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 200,
+                child: FutureBuilder<List<Movie>>(
+                  future: futureTopRatedMovies,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No movies found'));
+                    } else {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final movie = snapshot.data![index];
+                          return Container(
+                            width: 120,
+                            margin: const EdgeInsets.only(right: 10),
+                            child: MoviePoster(movie: movie),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // All Movies Grid
+              const Text(
+                'All Movies',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 10),
+              FutureBuilder<List<Movie>>(
+                future: movieApi.fetchMovies(selectedCategory),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -144,6 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     return const Center(child: Text('No movies found'));
                   } else {
                     return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,
@@ -159,8 +249,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,16 +1,21 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/movie_model.dart';
 
 class MovieApi {
-  static const String apiKey = '9e0200b7fad22edecb4aba6d587efbb4'; // Get from https://www.themoviedb.org/
+  static const String apiKey = '9e0200b7fad22edecb4aba6d587efbb4'; // Replace with your actual API key
   static const String baseUrl = 'https://api.themoviedb.org/3';
 
   Future<List<Movie>> fetchMovies(String category) async {
     final endpoint = category == 'All'
         ? '/movie/popular'
-        : '/discover/movie?with_genres=${_getGenreId(category)}';
-    
+        : category == 'Popular'
+            ? '/movie/popular'
+            : category == 'Top Rated'
+                ? '/movie/top_rated'
+                : '/discover/movie?with_genres=${_getGenreId(category)}';
+
     final response = await http.get(
       Uri.parse('$baseUrl$endpoint?api_key=$apiKey'),
     );
@@ -24,6 +29,15 @@ class MovieApi {
     } else {
       throw Exception('Failed to load movies');
     }
+  }
+
+  // Separate methods for specific movie lists
+  Future<List<Movie>> fetchPopularMovies() async {
+    return fetchMovies('Popular');
+  }
+
+  Future<List<Movie>> fetchTopRatedMovies() async {
+    return fetchMovies('Top Rated');
   }
 
   int _getGenreId(String category) {
