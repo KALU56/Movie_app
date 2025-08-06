@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/assets.dart';
 import '../core/movie_colors.dart';
-import '../widgt/login.dart';
-import '../widgt/siginup.dart';
+import '../widget/login.dart';
+import '../widget/siginup.dart';
 
 class LoginSiginup extends StatefulWidget {
   const LoginSiginup({super.key});
