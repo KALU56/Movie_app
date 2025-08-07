@@ -11,19 +11,8 @@ A Flutter application for browsing and discovering movies using the TMDB API.
 - User authentication (login/signup)
 - Password reset functionality
 - Responsive UI with dark/light theme support
-```
-## Screenshots
 
-| Welcome Screen | Onboarding | Login/Signup |
-|---------------|------------|--------------|
-| ![Welcome](screenshots/welcome.png) | ![Onboarding](screenshots/onboarding.png) | ![Login](screenshots/login.png) |
 
-| Home Screen | Movie Details | Forgot Password |
-|------------|---------------|-----------------|
-| ![Home](screenshots/home.png) | ![Details](screenshots/details.png) | ![Forgot](screenshots/forgot.png) |
-
-## Getting Started
-```
 ### Prerequisites
 
 - Flutter SDK (latest stable version)
@@ -56,7 +45,7 @@ A Flutter application for browsing and discovering movies using the TMDB API.
    ```
 
 ## Project Structure
-
+```
 
 lib/
 ├── core/                # Core app files
@@ -81,7 +70,7 @@ lib/
 │   ├── movie_poster.dart
 │   └── signup_form.dart
 └── main.dart            # App entry point
-
+```
 
 ## Dependencies
 
