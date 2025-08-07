@@ -1,6 +1,4 @@
-Here's a comprehensive `README.md` file for your movie app project:
 
-markdown
 # Movie App
 
 A Flutter application for browsing and discovering movies using the TMDB API.
